@@ -1,0 +1,122 @@
+<nz-layout class="warp">
+  <nz-content class="bg">
+    <nz-spin [nzSpinning]="isSpinning" class="warp">
+      <nz-table #basicTable [nzData]="list" [nzShowPagination]="false">
+        <thead>
+          <tr>
+            <th>User Name</th>
+            <th>Role</th>
+            <th>Operation</th>
+            <th>
+              <div (click)="showModal('New')" class="newAdd">
+                <i  class="icon-add " nz-icon nzType="plus-circle" nzTheme="outline"></i>
+                &nbsp; new
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of basicTable.data">
+            <td>{{ item.proposerName }}</td>
+            <td>{{ item.proposerEmail }}</td>
+            <td class="tip">
+              <span (click)="showModal('Modify', item)">Modify</span>
+              <span>Disable</span>
+              <span (click)="createTplModal(tplContent, tplFooter)">
+                initial password
+              </span>
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-spin>
+  </nz-content>
+  <div class="footer">
+    <nz-pagination
+      [(nzPageIndex)]="pageNo"
+      [nzTotal]="total"
+      (nzPageIndexChange)="PageIndexChange()"
+    ></nz-pagination>
+    <div class="gotopage" (click)="GoToChange()">Go to</div>
+    <nz-input-number
+      class="goinput"
+      [(ngModel)]="demoValue"
+      [nzMin]="1"
+      [nzSize]="'small'"
+      [nzMax]="10"
+      [nzStep]="1"
+    ></nz-input-number>
+  </div>
+</nz-layout>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  nzOkText="Confirm"
+  nzCancelText="Cancel"
+>
+  <h5 class="modal-title">{{ alertTitle }}</h5>
+  <form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="nickname">
+        <span>
+          User Name
+        </span>
+      </nz-form-label>
+      <nz-form-control
+        [nzSm]="14"
+        [nzXs]="24"
+        nzErrorTip="Please input your nickname!"
+      >
+        <input nz-input formControlName="nickname" id="nickname" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="email">E-mail</nz-form-label>
+      <nz-form-control
+        [nzSm]="14"
+        [nzXs]="24"
+        nzErrorTip="The input is not valid E-mail!"
+      >
+        <input formControlName="email" nz-input id="email" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="gender">Role</nz-form-label>
+      <nz-form-control
+        [nzSm]="14"
+        [nzXs]="24"
+        nzErrorTip="Please select your Role!"
+      >
+        <nz-select
+          id="Role"
+          formControlName="Role"
+          nzPlaceHolder="Select a option and change input text above"
+        >
+          <nz-option nzValue="male" nzLabel="male"></nz-option>
+          <nz-option nzValue="female" nzLabel="female"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>
+
+<ng-template class="bodyTemplate" #tplContent>
+ <div class="templateTitle">
+   <span>Initial password has been sent</span>
+ </div>
+ <i nz-icon nzType="close" class="cler" nzTheme="outline" (click)="hideModal()"></i>
+</ng-template>
+<ng-template #tplFooter>
+  <button
+    nz-button
+    nzType="danger"
+    class="dangerbut"
+    (click)="destroyTplModal()"
+    [nzLoading]="tplModalButtonLoading"
+  >
+    ok
+  </button>
+</ng-template>
